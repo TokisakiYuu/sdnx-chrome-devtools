@@ -26,6 +26,11 @@ function collectComplete(rows) {
     rows.forEach(createButtonForRow)
 }
 
+/**
+ * 创建按钮
+ * @param {HTMLTableRowElement} row 
+ */
 function createButtonForRow(row) {
-    
+    const phone = row.querySelector('td:nth-child(3)').innerText
+    console.log(`create button => phone: ${phone}`);
 }
