@@ -1,0 +1,21 @@
+
+{
+    "name": "Hello, World!",
+    "version": "1.0",
+    "manifest_version": 3,
+    "permissions": [
+        "activeTab"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts":[
+        {
+            "matches": ["http://retest.erafuture.cn/auth/services/servicesList/*/account"], 
+            "css": ["extension.css"],
+            "js": ["extension.js"],
+            "run_at": "document_idle"
+        }
+    ],
+    "action": {}
+}
