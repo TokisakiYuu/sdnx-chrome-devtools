@@ -1,7 +1,8 @@
 
 {
-    "name": "Hello, World!",
+    "name": "sdnx-devtools",
     "version": "1.0",
+    "description": "时代农信Chrome拓展",
     "manifest_version": 3,
     "permissions": [
         "activeTab"
@@ -11,11 +12,19 @@
     },
     "content_scripts":[
         {
-            "matches": ["http://retest.erafuture.cn/auth/services/servicesList/*/account"], 
+            "matches": [
+                "*://retest.erafuture.cn/auth/services/servicesList/*/account",
+                "*://retest.erafuture.cn/user/customLogin/*"
+            ], 
             "css": ["extension.css"],
-            "js": ["extension.js"],
+            "js": ["inject.js"],
             "run_at": "document_idle"
         }
     ],
-    "action": {}
+    "web_accessible_resources": [
+        {
+            "resources": [ "extension.js" ],
+            "matches": [ "*://*/*" ]
+        }
+    ]
 }
