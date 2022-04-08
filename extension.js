@@ -1,3 +1,7 @@
+const tokenRawData = localStorage.getItem('sdnxRequestId_1001')
+const tokenData = JSON.parse(tokenRawData)
+const requestToken = tokenData.value
+
 /**
  * 创建按钮
  * @param {HTMLTableRowElement} row 
@@ -8,21 +12,63 @@ function createButtonForRow(row, data) {
     const button = dom(`<a>登录此账号</a>`)
     operations.appendChild(separator)
     operations.appendChild(button)
-    button.addEventListener('click', () => {
-        // TODO 发起登录请求，得到token，写入localStorage，跳转页面
-        console.log(data)
-    })
+    button.addEventListener('click', async () => loginSystem(data))
     document.addEventListener('popstate', () => {
         separator.remove()
         button.remove()
     })
 }
 
+async function getLoginKey(data) {
+    const res = await originFetch('/gateway/authority/user/getLoginParam', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            'sdnxRequestId': requestToken
+        },
+        body: JSON.stringify(data)
+    })
+    const json = await res.json()
+    if (json.code === 10000) {
+        return json.info.loginKey
+    }
+}
+
+async function loginSystem(data) {
+    const { systemCode, userNo, userPhone } = data
+    const loginKey = await getLoginKey({
+        systemCode,
+        userNo
+    })
+    const loginRes = await originFetch('/gateway/authority/login/normal', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+        },
+        body: JSON.stringify({
+            loginKey: loginKey,
+            password: "e10adc3949ba59abbe56e057f20f883e",
+            userName: userPhone
+        })
+    })
+    const loginJson = await loginRes.json()
+    if (loginJson.code === 10000) {
+        const { userIndexInfoList, token, systemCode } = loginJson.info
+        const [indexPageInfo] = userIndexInfoList
+        const { indexUrl, prefix } = indexPageInfo
+        localStorage.setItem(`sdnxRequestId_${systemCode}`, `{"value":"${token}","writeTime":${Date.now()}}`)
+        window.open(`/${prefix}${indexUrl}`)
+    }
+}
+
+/** @type {(input: RequestInfo, init?: RequestInit) => Promise<Response>} */
+let originFetch = null
+
 function fetchTrap(callback) {
-    const oldFetch = window.fetch
+    originFetch = window.fetch
     const newFetch = async function(...args) {
         const [url] = args
-        const res = await oldFetch(...args)
+        const res = await originFetch(...args)
         const myRes = res.clone()
         const json = await myRes.json()
         if (json.code === 10000) {
