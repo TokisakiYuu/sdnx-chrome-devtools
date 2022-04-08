@@ -13,8 +13,7 @@
     "content_scripts":[
         {
             "matches": [
-                "*://retest.erafuture.cn/auth/services/servicesList/*/account",
-                "*://retest.erafuture.cn/user/customLogin/*"
+                "*://retest.erafuture.cn/*"
             ], 
             "css": ["extension.css"],
             "js": ["inject.js"],
