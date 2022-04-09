@@ -9,7 +9,7 @@ git clone https://github.com/TokisakiYuu/sdnx-chrome-devtools.git
 
 2. 加载到Chrome
 
-用Chrome打开此页面[chrome://extensions/](chrome://extensions/)，在页面右上角打开开发者模式，点击“加载已解压的拓展程序”，选择克隆下来的仓库
+用Chrome打开此页面[`chrome://extensions/`](chrome://extensions/)，在页面右上角打开开发者模式，点击“加载已解压的拓展程序”，选择克隆下来的仓库
 
 <br>
 
